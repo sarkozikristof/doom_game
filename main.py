@@ -5,6 +5,7 @@ from settings import *
 from map import Map
 from player import Player
 from raycasting import RayCasting
+from object_renderer import ObjectRenderer
 
 
 class Game:
@@ -18,6 +19,7 @@ class Game:
     def new_game(self):
         self.map = Map(self)
         self.player = Player(self)
+        self.object_renderer = ObjectRenderer(self)
         self.raycasting = RayCasting(self)
 
     def update(self):
@@ -29,6 +31,7 @@ class Game:
 
     def draw(self):
         self.screen.fill('black')
+        self.object_renderer.draw()
         if self.enable_mini_map is True:
             self.screen.fill('grey')
             self.map.draw()
@@ -43,10 +46,8 @@ class Game:
             if event.type == pg.KEYDOWN and event.key == pg.K_TAB and self.enable_mini_map is False:
                 self.enable_mini_map = True
 
-            if event.type == pg.KEYDOWN and event.key == pg.K_m and self.enable_mini_map is True:
+            if event.type == pg.KEYUP and event.key == pg.K_TAB:
                 self.enable_mini_map = False
-
-
 
     def run(self):
         while True:

@@ -4,6 +4,7 @@ import pygame as pg
 from settings import *
 from map import Map
 from player import Player
+from raycasting import RayCasting
 
 
 class Game:
@@ -16,10 +17,12 @@ class Game:
     def new_game(self):
         self.map = Map(self)
         self.player = Player(self)
+        self.raycasting = RayCasting(self)
 
     def update(self):
         self.delta_time = self.clock.tick(FPS)
         self.player.update()
+        self.raycasting.update()
         pg.display.flip()
         pg.display.set_caption(f'{self.clock.get_fps() :.2f}')
 

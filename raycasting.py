@@ -56,8 +56,15 @@ class RayCasting:
             else:
                 depth = depth_hor
 
-            pg.draw.line(self.game.screen, 'yellow', (100 * ox, 100 * oy),
-                         (100 * ox + 100 * depth * cos_a, 100 * oy + 100 * depth * sin_a), 2)
+            # remove fisheye effect
+            depth *= math.cos(self.game.player.angle - ray_angle)
+
+            proj_height = SCREEN_DIST / (depth + 0.0001)
+
+            color = [255 / (1 + depth ** 5 * 0.00002)] * 3
+            if self.game.enable_mini_map is False:
+                pg.draw.rect(self.game.screen, color,
+                             (ray * SCALE, HALF_HEIGHT - proj_height // 2, SCALE, proj_height))
 
             ray_angle += DELTA_ANGLE
 

@@ -12,6 +12,7 @@ class Game:
         pg.init()
         self.screen = pg.display.set_mode(RES)
         self.clock = pg.time.Clock()
+        self.enable_mini_map = False
         self.new_game()
 
     def new_game(self):
@@ -28,15 +29,24 @@ class Game:
 
     def draw(self):
         self.screen.fill('black')
-        self.map.draw()
-        self.player.draw()
+        if self.enable_mini_map is True:
+            self.screen.fill('grey')
+            self.map.draw()
+            self.player.draw()
 
-    @staticmethod
-    def check_event():
+    def check_event(self):
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 pg.quit()
                 sys.exit()
+
+            if event.type == pg.KEYDOWN and event.key == pg.K_TAB and self.enable_mini_map is False:
+                self.enable_mini_map = True
+
+            if event.type == pg.KEYDOWN and event.key == pg.K_m and self.enable_mini_map is True:
+                self.enable_mini_map = False
+
+
 
     def run(self):
         while True:

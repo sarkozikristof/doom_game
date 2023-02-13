@@ -11,6 +11,7 @@ from object_renderer import ObjectRenderer
 class Game:
     def __init__(self):
         pg.init()
+        pg.mouse.set_visible(False)
         self.screen = pg.display.set_mode(RES)
         self.clock = pg.time.Clock()
         self.enable_mini_map = False

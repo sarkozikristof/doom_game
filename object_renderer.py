@@ -10,7 +10,11 @@ class ObjectRenderer:
         self.wall_textures = self.load_wall_textures()
 
     def draw(self):
+        self.draw_background()
         self.render_game_objects()
+
+    def draw_background(self):
+        pg.draw.rect(self.screen, FLOOR_COLOR, (0, HALF_HEIGHT, WIDTH, HEIGHT))
 
     def render_game_objects(self):
         list_objects = sorted(self.game.raycasting.objects_to_render, key=lambda t: t[0], reverse=True)

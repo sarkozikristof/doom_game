@@ -10,6 +10,7 @@ class Player:
         self.x = PLAYER_POS[0]
         self.y = PLAYER_POS[1]
         self.angle = PLAYER_ANGLE
+        self.rel = 0
 
     def movement(self):
         sin_a = math.sin(self.angle)

@@ -9,7 +9,8 @@ class ObjectHandler:
         self.animated_sprite_path = 'resources/sprites/animated_sprites'
 
         self.add_sprite(SpriteObject(game))
-        self.add_sprite(AnimatedSprite(game))
+        self.add_sprite(AnimatedSprite(game, pos=(1.5, 1.5)))
+        self.add_sprite(AnimatedSprite(game, pos=(1.5, 7.5)))
 
     def update(self):
         [sprite.update() for sprite in self.sprite_list]

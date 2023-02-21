@@ -9,6 +9,7 @@ from object_renderer import ObjectRenderer
 from sprite_object import SpriteObject, AnimatedSprite
 from object_handler import ObjectHandler
 from weapon import Weapon
+from sound import Sound
 
 
 class Game:
@@ -27,6 +28,7 @@ class Game:
         self.raycasting = RayCasting(self)
         self.object_handler = ObjectHandler(self)
         self.weapon = Weapon(self)
+        self.sound = Sound(self)
 
     def update(self):
         self.delta_time = self.clock.tick(FPS)
@@ -56,6 +58,8 @@ class Game:
 
             if event.type == pg.KEYUP and event.key == pg.K_TAB:
                 self.enable_mini_map = False
+
+            self.player.single_fire_event(event)
 
     def run(self):
         while True:

@@ -6,7 +6,9 @@ from map import Map
 from player import Player
 from raycasting import RayCasting
 from object_renderer import ObjectRenderer
-from sprite_object import SpriteObject
+from sprite_object import SpriteObject, AnimatedSprite
+from object_handler import ObjectHandler
+from weapon import Weapon
 
 
 class Game:
@@ -23,19 +25,21 @@ class Game:
         self.player = Player(self)
         self.object_renderer = ObjectRenderer(self)
         self.raycasting = RayCasting(self)
-        self.static_sprite = SpriteObject(self)
+        self.object_handler = ObjectHandler(self)
+        self.weapon = Weapon(self)
 
     def update(self):
         self.delta_time = self.clock.tick(FPS)
         self.player.update()
         self.raycasting.update()
-        self.static_sprite.update()
+        self.object_handler.update()
+        self.weapon.update()
         pg.display.flip()
         pg.display.set_caption(f'{self.clock.get_fps() :.2f}')
 
     def draw(self):
-        self.screen.fill('black')
         self.object_renderer.draw()
+        self.weapon.draw()
         if self.enable_mini_map is True:
             self.screen.fill('grey')
             self.map.draw()

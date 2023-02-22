@@ -7,3 +7,4 @@ class Sound:
         pg.mixer.init()
         self.path = 'resources/sound'
         self.shotgun = pg.mixer.Sound(self.path + '/shotgun.mp3')
+        self.theme = pg.mixer.Sound(self.path + '/theme.ogg')

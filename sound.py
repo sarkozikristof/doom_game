@@ -8,3 +8,4 @@ class Sound:
         self.path = 'resources/sound'
         self.shotgun = pg.mixer.Sound(self.path + '/shotgun.mp3')
         self.theme = pg.mixer.Sound(self.path + '/theme.ogg')
+        self.theme.set_volume(0.2)

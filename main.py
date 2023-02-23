@@ -29,7 +29,7 @@ class Game:
         self.object_handler = ObjectHandler(self)
         self.weapon = Weapon(self)
         self.sound = Sound(self)
-        self.sound.theme.play()
+        self.sound.theme.play(loops=-1)
 
     def update(self):
         self.delta_time = self.clock.tick(FPS)

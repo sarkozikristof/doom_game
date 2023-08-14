@@ -1,7 +1,5 @@
-import math
-
 from sprite_object import AnimatedSprite
-from random import randint, random, choice
+from random import randint
 from settings import *
 import pygame as pg
 

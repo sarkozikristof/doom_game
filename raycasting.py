@@ -37,6 +37,7 @@ class RayCasting:
 
     def ray_cast(self):
         self.ray_casting_result = []
+        texture_vert, texture_hor = 1, 1
         ox, oy = self.game.player.pos
         x_map, y_map = self.game.player.map_pos
         ray_angle = self.game.player.angle - HALF_FOV + 0.0001
@@ -101,4 +102,3 @@ class RayCasting:
     def update(self):
         self.ray_cast()
         self.get_objects_to_render()
-

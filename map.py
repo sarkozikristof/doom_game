@@ -1,5 +1,5 @@
 import pygame as pg
-from map_gen.simple_room_placement import Generator
+from map_gen.simple_room_placement import mini_map
 
 _ = False
 
@@ -14,8 +14,6 @@ mini_map_v1 = [
     [1, _, _, _, _, _, 3, 3, _, _, _, _, _, _, _, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
-
-mini_map = Generator().generate()
 
 
 class Map:

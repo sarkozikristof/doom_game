@@ -2,11 +2,11 @@ import random
 
 WIDTH = 10
 HEIGHT = 10
-ROOM_COUNT = 2
+ROOM_COUNT = 1
 MIN_ROOM_WIDTH = 4
-MAX_ROOM_WIDTH = 10
+MAX_ROOM_WIDTH = 4
 MIN_ROOM_HEIGHT = 4
-MAX_ROOM_HEIGHT = 10
+MAX_ROOM_HEIGHT = 4
 
 
 class Room:
@@ -22,11 +22,7 @@ class Generate:
     ROOMS = []
 
     def __init__(self):
-        for col in range(WIDTH):
-            _row = []
-            for row in range(HEIGHT):
-                _row.append(False)
-            self.MAP.append(_row)
+        self._generate_base_map_boundaries()
 
     def generate(self):
         while len(self.ROOMS) != ROOM_COUNT:
@@ -41,8 +37,8 @@ class Generate:
     def _get_room():
         r_w = random.randint(MIN_ROOM_WIDTH, MAX_ROOM_WIDTH)
         r_h = random.randint(MIN_ROOM_HEIGHT, MAX_ROOM_HEIGHT)
-        r_x = random.randint(0, WIDTH - r_w)
-        r_y = random.randint(0, HEIGHT - r_h)
+        r_x = random.randint(1, WIDTH - r_w - 1)
+        r_y = random.randint(1, HEIGHT - r_h - 1)
 
         return Room(r_x, r_y, r_w, r_h)
 
@@ -62,14 +58,21 @@ class Generate:
     def _is_overlapping_other_room(self, room):
         for width_step in range(room.width):
             for height_step in range(room.height):
-                if self.MAP[room.x + width_step][room.y + height_step] is True:
+                if self.MAP[room.x + width_step][room.y + height_step] == 1:
                     return False
         return True
 
     def _place_room(self, room):
         for width_step in range(room.width):
             for height_step in range(room.height):
-                self.MAP[room.x + width_step][room.y + height_step] = 1
+                self.MAP[room.x + width_step][room.y + height_step] = False
+
+    def _generate_base_map_boundaries(self):
+        for col in range(WIDTH):
+            _row = []
+            for row in range(HEIGHT):
+                _row.append(1)
+            self.MAP.append(_row)
 
 
 mini_map = Generate().generate()

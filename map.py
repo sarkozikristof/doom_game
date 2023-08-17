@@ -31,4 +31,4 @@ class Map:
 
     def draw(self):
         for i in self.world_map:
-            pg.draw.rect(self.game.screen, 'red', (i[0] * 100, i[1] * 100, 100, 100), 2)
+            pg.draw.rect(self.game.screen, 'red', (i[0] * 10, i[1] * 10, 10, 10), 2)

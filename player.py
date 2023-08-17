@@ -6,8 +6,7 @@ from settings import *
 class Player:
     def __init__(self, game):
         self.game = game
-        self.x = PLAYER_POS[0]
-        self.y = PLAYER_POS[1]
+        self.x, self.y = self.get_starting_position()
         self.angle = PLAYER_ANGLE
         self.rel = 0
         self.shot = False
@@ -61,10 +60,10 @@ class Player:
             self.y += dy
 
     def draw(self):
-        pg.draw.circle(self.game.screen, 'green', (self.x * 100, self.y * 100), 15)
-        pg.draw.line(self.game.screen, 'yellow', (self.x * 100, self.y * 100),
-                     (self.x * 100 + WIDTH * math.cos(self.angle),
-                      self.y * 100 + WIDTH * math.sin(self.angle)), 2)
+        pg.draw.circle(self.game.screen, 'green', (self.x * 10, self.y * 10), 7)
+        pg.draw.line(self.game.screen, 'yellow', (self.x * 10, self.y * 10),
+                     (self.x * 10 + WIDTH * math.cos(self.angle),
+                      self.y * 10 + WIDTH * math.sin(self.angle)), 2)
 
     def mouse_control(self):
         mx, my = pg.mouse.get_pos()
@@ -89,3 +88,9 @@ class Player:
     @property
     def map_pos(self):
         return int(self.x), int(self.y)
+
+    def get_starting_position(self):
+        for x in range(len(self.game.map.mini_map)):
+            for y in range(len(self.game.map.mini_map[x])):
+                if not self.game.map.mini_map[x][y]:
+                    return y + 0.5, x + 0.5

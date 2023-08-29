@@ -70,8 +70,6 @@ class Player:
 
         if MOUSE_BORDER_LEFT > mx or mx > MOUSE_BORDER_RIGHT:
             pg.mouse.set_pos([HALF_WIDTH, HALF_HEIGHT])
-        if my >= 0 or my >= HEIGHT:
-            pg.mouse.set_pos([HALF_WIDTH, HALF_HEIGHT])
 
         self.rel = pg.mouse.get_rel()[0]
         self.rel = max(-MOUSE_MAX_REL, min(MOUSE_MAX_REL, self.rel))

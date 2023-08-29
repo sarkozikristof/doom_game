@@ -3,7 +3,7 @@ from map_gen.simple_room_placement import mini_map
 
 _ = False
 
-mini_map_v1 = [
+mini_map_v2 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1],
     [1, _, _, _, _, _, _, _, _, _, _, _, 2, _, _, 3],

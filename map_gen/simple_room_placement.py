@@ -1,8 +1,8 @@
 import random
 
-WIDTH = 50
-HEIGHT = 50
-ROOM_COUNT = 5
+WIDTH = 70  # 90
+HEIGHT = 70  # 160
+ROOM_COUNT = 20
 MIN_ROOM_WIDTH = 10
 MAX_ROOM_WIDTH = 10
 MIN_ROOM_HEIGHT = 10
@@ -31,6 +31,7 @@ class Generate:
                 self._place_room(room)
                 self.ROOMS.append(room)
 
+        self._connect_rooms_with_corridors()
         return self.MAP
 
     @staticmethod
@@ -74,5 +75,31 @@ class Generate:
                 _row.append(1)
             self.MAP.append(_row)
 
+    def _connect_rooms_with_corridors(self):
+        for i in range(1, len(self.ROOMS)):
+            prev_room = self.ROOMS[i - 1]
+            current_room = self.ROOMS[i]
+
+            if current_room.x + current_room.width // 2 > prev_room.x + prev_room.width // 2:
+                start_x = prev_room.x + prev_room.width // 2
+                end_x = current_room.x + current_room.width // 2
+            else:
+                start_x = current_room.x + current_room.width // 2
+                end_x = prev_room.x + prev_room.width // 2
+
+            self._create_horizontal_corridor(start_x, end_x, current_room.y + current_room.height // 2)
+            self._create_vertical_corridor(start_x, prev_room.y + prev_room.height // 2,
+                                           current_room.y + current_room.height // 2)
+
+        return self.MAP
+
+    def _create_horizontal_corridor(self, start_x, end_x, y):
+        for x in range(min(start_x, end_x), max(start_x, end_x) + 1):
+            self.MAP[x][y] = False
+
+    def _create_vertical_corridor(self, x, start_y, end_y):
+        for y in range(min(start_y, end_y), max(start_y, end_y) + 1):
+            self.MAP[x][y] = False
+            
 
 mini_map = Generate().generate()

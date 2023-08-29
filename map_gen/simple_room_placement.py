@@ -2,7 +2,7 @@ import random
 
 WIDTH = 70  # 90
 HEIGHT = 70  # 160
-ROOM_COUNT = 20
+ROOM_COUNT = 15
 MIN_ROOM_WIDTH = 10
 MAX_ROOM_WIDTH = 10
 MIN_ROOM_HEIGHT = 10
@@ -57,8 +57,8 @@ class Generate:
         return True
 
     def _is_overlapping_other_room(self, room):
-        for width_step in range(room.width):
-            for height_step in range(room.height):
+        for width_step in range(-1, room.width + 1):
+            for height_step in range(-1, room.height + 1):
                 if not self.MAP[room.x + width_step][room.y + height_step]:
                     return False
         return True

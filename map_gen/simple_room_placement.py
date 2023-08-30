@@ -1,12 +1,13 @@
 import random
+import math
 
-WIDTH = 70  # 90
-HEIGHT = 70  # 160
-ROOM_COUNT = 15
+WIDTH = 80  # 90
+HEIGHT = 150  # 160
+ROOM_COUNT = 20
 MIN_ROOM_WIDTH = 10
-MAX_ROOM_WIDTH = 10
+MAX_ROOM_WIDTH = 20
 MIN_ROOM_HEIGHT = 10
-MAX_ROOM_HEIGHT = 10
+MAX_ROOM_HEIGHT = 20
 
 
 class Room:
@@ -15,6 +16,7 @@ class Room:
         self.y = y
         self.width = width
         self.height = height
+        self.connected_rooms = []
 
 
 class Generate:
@@ -42,6 +44,33 @@ class Generate:
         r_y = random.randint(1, HEIGHT - r_h - 1)
 
         return Room(r_x, r_y, r_w, r_h)
+
+    def _ensure_indirect_reachability(self):
+        room_to_neighbors = {room: [] for room in self.ROOMS}
+
+        for room in self.ROOMS:
+            for connected_room in room.connected_rooms:
+                room_to_neighbors[room].append(connected_room)
+                room_to_neighbors[connected_room].append(room)
+
+        visited = set()
+
+        def dfs(room):
+            if room in visited:
+                return
+            visited.add(room)
+            for neighbor in room_to_neighbors[room]:
+                dfs(neighbor)
+
+        # Start DFS from a randomly chosen room
+        start_room = random.choice(self.ROOMS)
+        dfs(start_room)
+
+        # Ensure all rooms are visited
+        for room in self.ROOMS:
+            if room not in visited:
+                self._connect_two_rooms(room, random.choice(room_to_neighbors[room]))
+                dfs(room)
 
     def _is_correct_position(self, room):
         if self._is_out_of_map_boundaries(room) and self._is_overlapping_other_room(room):
@@ -76,22 +105,37 @@ class Generate:
             self.MAP.append(_row)
 
     def _connect_rooms_with_corridors(self):
-        for i in range(1, len(self.ROOMS)):
-            prev_room = self.ROOMS[i - 1]
+        self.ROOMS.sort(key=lambda room: (room.x, room.y))
+
+        for i in range(len(self.ROOMS)):
             current_room = self.ROOMS[i]
 
-            if current_room.x + current_room.width // 2 > prev_room.x + prev_room.width // 2:
-                start_x = prev_room.x + prev_room.width // 2
-                end_x = current_room.x + current_room.width // 2
-            else:
-                start_x = current_room.x + current_room.width // 2
-                end_x = prev_room.x + prev_room.width // 2
+            nearest_rooms = self._find_nearest_rooms(current_room, self.ROOMS)
 
-            self._create_horizontal_corridor(start_x, end_x, current_room.y + current_room.height // 2)
-            self._create_vertical_corridor(start_x, prev_room.y + prev_room.height // 2,
-                                           current_room.y + current_room.height // 2)
+            for nearest_room in nearest_rooms:
+                if len(current_room.connected_rooms) < 2 and len(nearest_room.connected_rooms) < 2:
+                    self._connect_two_rooms(current_room, nearest_room)
+                    current_room.connected_rooms.append(nearest_room)
+                    nearest_room.connected_rooms.append(current_room)
 
         return self.MAP
+
+    def _find_nearest_rooms(self, source_room, target_rooms):
+        target_rooms = sorted(target_rooms, key=lambda room: self._calculate_distance(source_room, room))
+        return target_rooms[1:3]  # Exclude the source room itself
+
+    @staticmethod
+    def _calculate_distance(room1, room2):
+        return math.sqrt((room1.x - room2.x) ** 2 + (room1.y - room2.y) ** 2)
+
+    def _connect_two_rooms(self, room1, room2):
+        start_x = room1.x + room1.width // 2
+        start_y = room1.y + room1.height // 2
+        end_x = room2.x + room2.width // 2
+        end_y = room2.y + room2.height // 2
+
+        self._create_horizontal_corridor(start_x, end_x, start_y)
+        self._create_vertical_corridor(end_x, start_y, end_y)
 
     def _create_horizontal_corridor(self, start_x, end_x, y):
         for x in range(min(start_x, end_x), max(start_x, end_x) + 1):
@@ -100,6 +144,6 @@ class Generate:
     def _create_vertical_corridor(self, x, start_y, end_y):
         for y in range(min(start_y, end_y), max(start_y, end_y) + 1):
             self.MAP[x][y] = False
-            
+
 
 mini_map = Generate().generate()

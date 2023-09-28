@@ -1,13 +1,13 @@
 import random
 import math
 
-WIDTH = 80  # 90
-HEIGHT = 150  # 160
-ROOM_COUNT = 4
-MIN_ROOM_WIDTH = 10
-MAX_ROOM_WIDTH = 20
-MIN_ROOM_HEIGHT = 10
-MAX_ROOM_HEIGHT = 20
+WIDTH = 20  # 90
+HEIGHT = 20  # 160
+ROOM_COUNT = 2
+MIN_ROOM_WIDTH = 5
+MAX_ROOM_WIDTH = 5
+MIN_ROOM_HEIGHT = 5
+MAX_ROOM_HEIGHT = 5
 
 
 class Room:
@@ -35,16 +35,49 @@ class Generate:
         # find the closest room to the input
         base_room = self.ROOMS[0]
         closest_room = self.find_the_closest_room(base_room)
-        # find the two points (middle of the room)
-        # base_middle, closest_middle = self.find_rooms_middle_point(base_room, closest_room)
+        base_mid = self.find_room_middle_point(base_room)
+        closest_mid = self.find_room_middle_point(closest_room)
+
+        distance_x, distance_y = self.get_distance(base_mid, closest_mid)
+
+        self.connect_middle_points(base_mid, closest_mid, distance_x, distance_y)
         # connect the two points
 
     @staticmethod
-    def find_rooms_middle_point(base_room: Room, closest_room: Room):
+    def get_distance(base_mid, closest_mid):
+        dist_x = base_mid[0] - closest_mid[0]
+        dist_y = base_mid[1] - closest_mid[1]
+
+        return dist_x, dist_y
+
+    def connect_middle_points(self, base_mid, closest_mid, distance_x, distance_y):
+        b_x, b_y = base_mid
+        c_x, c_y = closest_mid
+
+        start_x = b_x
+        start_y = b_y
+        distance = distance_x
+        self.connect_horizontally(start_x, start_y, distance)
+
+    def connect_horizontally(self, start_x, start_y, distance):
+        if distance > 0:
+            for step in range(distance):
+                self.MAP[start_x][start_y + step] = False
+        else:
+            pass
+
+    def connect_vertically(self, start_x, start_y, distance):
         pass
 
+    @staticmethod
+    def find_room_middle_point(room: Room):
+        middle_x = int(room.x + room.width / 2)
+        middle_y = int(room.y + room.height / 2)
+
+        return middle_x, middle_y
+
     def find_the_closest_room(self, room: Room) -> Room:
-        closest_distance = float('inf')  # Initialize with a large value
+        closest_distance = float('inf')
         closest_room = None
 
         for other_room in self.ROOMS:
@@ -64,12 +97,6 @@ class Generate:
         center2_y = room2.y + (room2.height // 2)
 
         return math.sqrt((center1_x - center2_x) ** 2 + (center1_y - center2_y) ** 2)
-
-    def create_horizontal_corridor(self):
-        pass
-
-    def create_vertical_corridor(self):
-        pass
 
     def generate_base_map(self):
         while len(self.ROOMS) != ROOM_COUNT:

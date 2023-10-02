@@ -41,11 +41,9 @@ class Generate:
         closest_room = self.find_the_closest_room(base_room)
         base_mid = self.find_room_middle_point(base_room)
         closest_mid = self.find_room_middle_point(closest_room)
-
         distance_x, distance_y = self.get_distance(base_mid, closest_mid)
 
-        self.connect_middle_points(base_mid, closest_mid, distance_x, distance_y)
-        # connect the two points
+        self.connect_middle_points(base_mid, distance_x, distance_y)
 
     @staticmethod
     def get_distance(base_mid, closest_mid):
@@ -54,12 +52,15 @@ class Generate:
         print(f'distance: {dist_x}, {dist_y}')
         return dist_x, dist_y
 
-    def connect_middle_points(self, base_mid, closest_mid, distance_x, distance_y):
+    def connect_middle_points(self, base_mid, distance_x, distance_y):
         b_x, b_y = base_mid
-        c_x, c_y = closest_mid
         start_x = b_x
         start_y = b_y
         self.connect_horizontally(start_x, start_y, distance_x)
+
+        start_x = b_x - distance_x
+        start_y = b_y
+        self.connect_vertically(start_x, start_y, distance_y)
 
     def connect_horizontally(self, start_x, start_y, distance_x):
         if distance_x > 0:
@@ -69,8 +70,13 @@ class Generate:
             for step in range(0, distance_x, -1):
                 self.MAP[start_y][start_x - step + 1] = False
 
-    def connect_vertically(self, start_x, start_y, distance):
-        pass
+    def connect_vertically(self, start_x, start_y, distance_y):
+        if distance_y > 0:
+            for step in range(distance_y):
+                self.MAP[start_y - step - 1][start_x] = False
+        else:
+            for step in range(0, distance_y, -1):
+                self.MAP[start_y - step +1][start_x] = False
 
     @staticmethod
     def find_room_middle_point(room: Room):

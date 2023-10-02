@@ -1,8 +1,8 @@
 import random
 import math
 
-WIDTH = 20  # 90
-HEIGHT = 20  # 160
+WIDTH = 50  # 90
+HEIGHT = 50  # 160
 ROOM_COUNT = 2
 MIN_ROOM_WIDTH = 5
 MAX_ROOM_WIDTH = 5
@@ -23,6 +23,7 @@ class Generate:
     def __init__(self):
         self.MAP = []
         self.ROOMS = []
+        self.CONNECTED_ROOMS = []
 
     def get_map(self):
         self.generate_map_boundaries()
@@ -32,6 +33,9 @@ class Generate:
         return self.MAP
 
     def connect_rooms(self):
+        if len(self.ROOMS) <= 1:
+            return
+
         # find the closest room to the input
         base_room = self.ROOMS[0]
         closest_room = self.find_the_closest_room(base_room)
@@ -47,24 +51,23 @@ class Generate:
     def get_distance(base_mid, closest_mid):
         dist_x = base_mid[0] - closest_mid[0]
         dist_y = base_mid[1] - closest_mid[1]
-
+        print(f'distance: {dist_x}, {dist_y}')
         return dist_x, dist_y
 
     def connect_middle_points(self, base_mid, closest_mid, distance_x, distance_y):
         b_x, b_y = base_mid
         c_x, c_y = closest_mid
-
         start_x = b_x
         start_y = b_y
-        distance = distance_x
-        self.connect_horizontally(start_x, start_y, distance)
+        self.connect_horizontally(start_x, start_y, distance_x)
 
-    def connect_horizontally(self, start_x, start_y, distance):
-        if distance > 0:
-            for step in range(distance):
-                self.MAP[start_x][start_y + step] = False
+    def connect_horizontally(self, start_x, start_y, distance_x):
+        if distance_x > 0:
+            for step in range(distance_x):
+                self.MAP[start_y][start_x - step - 1] = False
         else:
-            pass
+            for step in range(0, distance_x, -1):
+                self.MAP[start_y][start_x - step + 1] = False
 
     def connect_vertically(self, start_x, start_y, distance):
         pass
@@ -108,7 +111,7 @@ class Generate:
     def place_room(self, room: Room):
         for width_step in range(room.width):
             for height_step in range(room.height):
-                self.MAP[room.x + width_step][room.y + height_step] = False
+                self.MAP[room.y + height_step][room.x + width_step] = False
 
     def is_room_good_position(self, room: Room) -> bool:
         if not self.is_out_of_map(room) and not self.is_overlapping_other_room(room):

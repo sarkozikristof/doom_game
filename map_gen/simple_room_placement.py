@@ -3,7 +3,7 @@ import math
 
 WIDTH = 50  # 90
 HEIGHT = 50  # 160
-ROOM_COUNT = 2
+ROOM_COUNT = 5
 MIN_ROOM_WIDTH = 5
 MAX_ROOM_WIDTH = 5
 MIN_ROOM_HEIGHT = 5
@@ -37,19 +37,28 @@ class Generate:
             return
 
         # find the closest room to the input
-        base_room = self.ROOMS[0]
-        closest_room = self.find_the_closest_room(base_room)
-        base_mid = self.find_room_middle_point(base_room)
-        closest_mid = self.find_room_middle_point(closest_room)
-        distance_x, distance_y = self.get_distance(base_mid, closest_mid)
+        for room in self.ROOMS:
+            if room in self.CONNECTED_ROOMS:
+                continue
+            closest_room = self.find_the_closest_room(room)
+            base_mid = self.find_room_middle_point(room)
+            closest_mid = self.find_room_middle_point(closest_room)
+            distance_x, distance_y = self.get_distance(base_mid, closest_mid)
 
-        self.connect_middle_points(base_mid, distance_x, distance_y)
+            self.connect_middle_points(base_mid, distance_x, distance_y)
+            self.add_rooms_to_connected_rooms_list(room, closest_room)
+
+    def add_rooms_to_connected_rooms_list(self, base_room, closest_room):
+        if base_room not in self.CONNECTED_ROOMS:
+            self.CONNECTED_ROOMS.append(base_room)
+        if closest_room not in self.CONNECTED_ROOMS:
+            self.CONNECTED_ROOMS.append(closest_room)
 
     @staticmethod
     def get_distance(base_mid, closest_mid):
         dist_x = base_mid[0] - closest_mid[0]
         dist_y = base_mid[1] - closest_mid[1]
-        print(f'distance: {dist_x}, {dist_y}')
+
         return dist_x, dist_y
 
     def connect_middle_points(self, base_mid, distance_x, distance_y):

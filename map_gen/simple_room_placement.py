@@ -3,7 +3,7 @@ import math
 
 WIDTH = 50  # 90
 HEIGHT = 50  # 160
-ROOM_COUNT = 2
+ROOM_COUNT = 5
 MIN_ROOM_WIDTH = 4
 MAX_ROOM_WIDTH = 4
 MIN_ROOM_HEIGHT = 6
@@ -35,7 +35,6 @@ class Generate:
         if len(self.ROOMS) <= 1:
             return
 
-        # find the closest room to the input
         for room in self.ROOMS:
             if room in self.CONNECTED_ROOMS:
                 continue
@@ -57,7 +56,6 @@ class Generate:
     def get_distance(base_mid, closest_mid):
         dist_x = base_mid[0] - closest_mid[0]
         dist_y = base_mid[1] - closest_mid[1]
-        print(f'{dist_x=}, {dist_y=}')
         return dist_x, dist_y
 
     def connect_middle_points(self, base_mid, distance_x, distance_y):
@@ -97,7 +95,11 @@ class Generate:
         closest_distance = float('inf')
         closest_room = None
 
-        for other_room in self.ROOMS:
+        searching_rooms = self.CONNECTED_ROOMS
+        if not self.CONNECTED_ROOMS:
+            searching_rooms = self.ROOMS
+
+        for other_room in searching_rooms:
             if other_room != room:
                 distance = self.calculate_distance(room, other_room)
                 if distance < closest_distance:

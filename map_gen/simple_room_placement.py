@@ -17,6 +17,7 @@ class Room:
         self.width = width
         self.height = height
         self.connected_with = []
+        self.difficulty = 5  # 0-10
 
 
 class Generate:

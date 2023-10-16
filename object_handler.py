@@ -1,6 +1,6 @@
 import random
 from sprite_object import SpriteObject, AnimatedSprite
-from npc import NPC
+from npc import SoldierNPC, CacoDemonNPC, CyberDemonNPC
 
 
 class ObjectHandler:
@@ -27,13 +27,7 @@ class ObjectHandler:
         for width_step in range(room.width):
             for height_step in range(room.height):
                 if self.is_spawning():
-                    self.add_npc(NPC(
-                        game=self.game,
-                        pos=(
-                            room.y + height_step,
-                            room.x + width_step
-                        )
-                    ))
+                    self.spawn(room)
 
     @staticmethod
     def is_spawning():
@@ -42,6 +36,30 @@ class ObjectHandler:
         if r > 9:
             return True
         return False
+
+    def spawn(self, room):
+        difficulty = room.difficulty * random.randint(0, 2)
+
+        if difficulty < 2:
+            return
+        elif 2 <= difficulty < 5:
+            return
+        elif 5 <= difficulty < 9:
+            return
+        else:
+            return
+
+    def spawn_soldier(self, position):
+        self.add_npc(SoldierNPC(game=self.game,
+                                pos=position))
+
+    def spawn_caco_demon(self, position):
+        self.add_npc(CacoDemonNPC(game=self.game,
+                                  pos=position))
+
+    def spawn_cyber_demon(self, position):
+        self.add_npc(CyberDemonNPC(game=self.game,
+                                   pos=position))
 
     def update(self):
         [sprite.update() for sprite in self.sprite_list]

@@ -1,8 +1,6 @@
 import random
 import math
 
-from npc import NPC
-
 WIDTH = 50  # 90
 HEIGHT = 50  # 160
 ROOM_COUNT = 5
@@ -32,7 +30,6 @@ class Generate:
         self.generate_base_map()
         self.connect_rooms()
 
-        self.spawn_enemies()
         return self.MAP
 
     def connect_rooms(self):
@@ -168,34 +165,3 @@ class Generate:
             for row in range(HEIGHT):
                 row_.append(1)
             self.MAP.append(row_)
-
-    def spawn_enemies(self):
-        spawner = EnemySpawner(self.MAP, self.ROOMS)
-        spawner.spawn()
-
-
-class EnemySpawner:
-    def __init__(self, m_map, rooms):
-        self.MAP = m_map
-        self.ROOMS = rooms
-
-    def spawn(self):
-        for room in self.ROOMS:
-            self.spawn_in_room(room)
-
-    def spawn_in_room(self, room: Room):
-        for width_step in range(room.width):
-            for height_step in range(room.height):
-                if self.is_spawning():
-                   pass
-
-    @staticmethod
-    def is_spawning():
-        r = random.randint(0, 10)
-
-        if r > 8:
-            return True
-        return False
-
-
-mini_map = Generate().get_map()

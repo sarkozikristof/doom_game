@@ -20,46 +20,55 @@ class ObjectHandler:
 
     def spawn_enemies(self):
         for room in self.game.map.generator.ROOMS:
-            self.spawn_in_room(room)
-        print(len(self.npc_list))
-
-    def spawn_in_room(self, room):
-        for width_step in range(room.width):
-            for height_step in range(room.height):
-                if self.is_spawning():
-                    self.spawn(room)
-
-    @staticmethod
-    def is_spawning():
-        r = random.randint(0, 10)
-
-        if r > 9:
-            return True
-        return False
+            if not room.is_spawn_room:
+                self.spawn(room)
 
     def spawn(self, room):
-        difficulty = room.difficulty * random.randint(0, 2)
+        difficulty = room.difficulty * random.random() * 2
 
-        if difficulty < 2:
+        if difficulty < 1:
             return
+        elif 1 <= difficulty < 2:
+            self.spawn_soldier(room)
         elif 2 <= difficulty < 5:
-            return
-        elif 5 <= difficulty < 9:
-            return
+            self.spawn_soldier(room)
+            self.spawn_soldier(room)
+        elif 5 <= difficulty < 7:
+            self.spawn_caco_demon(room)
+            self.spawn_soldier(room)
+        elif 7 <= difficulty < 9:
+            self.spawn_caco_demon(room)
+            self.spawn_caco_demon(room)
         else:
-            return
+            self.spawn_cyber_demon(room)
 
-    def spawn_soldier(self, position):
+    def spawn_soldier(self, room):
+        position = self.get_random_spawn_position(room)
         self.add_npc(SoldierNPC(game=self.game,
                                 pos=position))
 
-    def spawn_caco_demon(self, position):
+    def spawn_caco_demon(self, room):
+        position = self.get_random_spawn_position(room)
         self.add_npc(CacoDemonNPC(game=self.game,
                                   pos=position))
 
-    def spawn_cyber_demon(self, position):
+    def spawn_cyber_demon(self, room):
+        position = self.get_random_spawn_position(room)
         self.add_npc(CyberDemonNPC(game=self.game,
                                    pos=position))
+
+    @staticmethod
+    def get_random_spawn_position(room):
+        x_min_pos = room.x + 1
+        x_max_pos = room.x + room.width - 1
+
+        y_min_pos = room.y + 1
+        y_max_pos = room.y + room.height - 1
+
+        x_pos = random.randint(x_min_pos, x_max_pos)
+        y_pos = random.randint(y_min_pos, y_max_pos)
+
+        return y_pos, x_pos
 
     def update(self):
         [sprite.update() for sprite in self.sprite_list]

@@ -103,7 +103,7 @@ class NPC(AnimatedSprite):
         depth_hor = (y_hor - oy) / (sin_a + 0.00001)
         x_hor = ox + depth_hor * cos_a
 
-        delta_depth = dy / sin_a
+        delta_depth = dy / (sin_a + 0.00001)
         dx = delta_depth * cos_a
 
         for i in range(MAX_DEPTH):
@@ -194,5 +194,5 @@ class CyberDemonNPC(NPC):
         self.attack_dist = 6
         self.health = 350
         self.attack_damage = 15
-        self.speed = 0.055
+        self.speed = 0.025
         self.accuracy = 0.25

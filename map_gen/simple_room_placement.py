@@ -1,8 +1,9 @@
 import random
 import math
 
-WIDTH = 50  # 90
-HEIGHT = 50  # 160
+DIFFICULTY = 5  # 1 - 10
+WIDTH = 30  # 90
+HEIGHT = 30  # 160
 ROOM_COUNT = 5
 MIN_ROOM_WIDTH = 4
 MAX_ROOM_WIDTH = 4
@@ -17,7 +18,8 @@ class Room:
         self.width = width
         self.height = height
         self.connected_with = []
-        self.difficulty = 5  # 0-10
+        self.is_spawn_room = False
+        self.difficulty = DIFFICULTY
 
 
 class Generate:
@@ -166,3 +168,14 @@ class Generate:
             for row in range(HEIGHT):
                 row_.append(1)
             self.MAP.append(row_)
+
+    def is_there_a_one_connection_room(self) -> bool:
+        for room in self.ROOMS:
+            if len(room.connected_with) == 1:
+                return True
+        return False
+
+    def get_one_connection_room(self) -> Room:
+        for room in self.ROOMS:
+            if len(room.connected_with) == 1:
+                return room

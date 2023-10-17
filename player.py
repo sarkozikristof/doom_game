@@ -1,3 +1,5 @@
+import random
+
 import pygame as pg
 
 from settings import *
@@ -88,7 +90,28 @@ class Player:
         return int(self.x), int(self.y)
 
     def get_starting_position(self):
-        for x in range(len(self.game.map.mini_map)):
-            for y in range(len(self.game.map.mini_map[x])):
-                if not self.game.map.mini_map[x][y]:
-                    return y + 0.5, x + 0.5
+
+        if self.game.map.generator.is_there_a_one_connection_room():
+            spawn_room = self.game.map.generator.get_one_connection_room()
+        else:
+            rooms = self.game.map.generator.ROOMS
+            room_count = len(rooms)
+            random_room_index = random.randint(0, room_count - 1)
+            spawn_room = rooms[random_room_index]
+
+        spawn_room.is_spawn_room = True
+
+        return self.get_random_spawn_point(spawn_room)
+
+    @staticmethod
+    def get_random_spawn_point(room):
+        x_min_pos = room.x + 1
+        x_max_pos = room.x + room.width - 1
+
+        y_min_pos = room.y + 1
+        y_max_pos = room.y + room.height - 1
+
+        x_pos = random.randint(x_min_pos, x_max_pos)
+        y_pos = random.randint(y_min_pos, y_max_pos)
+
+        return y_pos, x_pos

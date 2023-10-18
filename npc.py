@@ -1,5 +1,5 @@
 from sprite_object import AnimatedSprite
-from random import randint
+from random import randint, random
 from settings import *
 import pygame as pg
 
@@ -15,7 +15,7 @@ class NPC(AnimatedSprite):
         self.walk_images = self.get_images(self.path + '/walk')
 
         self.attack_dist = randint(3, 6)
-        self.speed = 0.03
+        self.speed = 0.0015
         self.size = 10
         self.health = 100
         self.attack_damage = 10
@@ -35,8 +35,13 @@ class NPC(AnimatedSprite):
 
             elif self.ray_cast_value:
                 self.player_search_trigger = True
-                self.animate(self.walk_images)
-                self.movement()
+
+                if self.dist < self.attack_dist:
+                    self.animate(self.attack_images)
+                    self.attack()
+                else:
+                    self.animate(self.walk_images)
+                    self.movement()
 
             elif self.player_search_trigger:
                 self.animate(self.walk_images)
@@ -67,6 +72,12 @@ class NPC(AnimatedSprite):
         if self.health < 1:
             self.alive = False
             self.game.sound.npc_death.play()
+
+    def attack(self):
+        if self.animation_trigger:
+            self.game.sound.npc_shot.play()
+            if random() < self.accuracy:
+                self.game.player.get_damage(self.attack_damage)
 
     def animate_pain(self):
         self.animate(self.pain_images)

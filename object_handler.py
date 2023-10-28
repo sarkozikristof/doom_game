@@ -8,6 +8,8 @@ class ObjectHandler:
         self.game = game
         self.sprite_list = []
         self.npc_list = []
+        self.death_npc_count = 0
+        self.npc_count = len(self.npc_list) - self.death_npc_count
         self.npc_sprite_path = 'resources/sprites/npc/'
         self.static_sprite_path = 'resources/sprites/static_sprites'
         self.animated_sprite_path = 'resources/sprites/animated_sprites'

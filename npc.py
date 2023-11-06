@@ -14,7 +14,7 @@ class NPC(AnimatedSprite):
         self.pain_images = self.get_images(self.path + '/pain')
         self.walk_images = self.get_images(self.path + '/walk')
 
-        self.attack_dist = randint(3, 6)
+        self.attack_dist = 15
         self.speed = 0.0015
         self.size = 10
         self.health = 100
@@ -194,7 +194,7 @@ class CacoDemonNPC(NPC):
     def __init__(self, game, path='resources/sprites/npc/caco_demon/0.png', pos=(10.5, 6.5),
                  scale=0.7, shift=0.27, animation_time=250):
         super().__init__(game, path, pos, scale, shift, animation_time)
-        self.attack_dist = 1.0
+        self.attack_dist = 2.0
         self.health = 150
         self.attack_damage = 25
         self.speed = 0.05
@@ -205,7 +205,7 @@ class CyberDemonNPC(NPC):
     def __init__(self, game, path='resources/sprites/npc/cyber_demon/0.png', pos=(11.5, 6.0),
                  scale=1.0, shift=0.04, animation_time=210):
         super().__init__(game, path, pos, scale, shift, animation_time)
-        self.attack_dist = 6
+        self.attack_dist = 12
         self.health = 350
         self.attack_damage = 40
         self.speed = 0.015

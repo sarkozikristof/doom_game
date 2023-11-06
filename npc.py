@@ -19,7 +19,7 @@ class NPC(AnimatedSprite):
         self.size = 10
         self.health = 100
         self.attack_damage = 10
-        self.accuracy = 0.15
+        self.accuracy = 0.25
         self.alive = True
         self.pain = False
         self.ray_cast_value = False
@@ -198,7 +198,7 @@ class CacoDemonNPC(NPC):
         self.health = 150
         self.attack_damage = 25
         self.speed = 0.05
-        self.accuracy = 0.35
+        self.accuracy = 0.50
 
 
 class CyberDemonNPC(NPC):

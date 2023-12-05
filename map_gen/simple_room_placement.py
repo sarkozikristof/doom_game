@@ -4,7 +4,7 @@ import math
 DIFFICULTY = 5  # 1 - 10
 WIDTH = 60  # 90
 HEIGHT = 60  # 160
-ROOM_COUNT = 15
+ROOM_COUNT = 150
 MIN_ROOM_WIDTH = 5
 MAX_ROOM_WIDTH = 10
 MIN_ROOM_HEIGHT = 5
@@ -122,11 +122,14 @@ class Generate:
         return math.sqrt((center1_x - center2_x) ** 2 + (center1_y - center2_y) ** 2)
 
     def generate_base_map(self):
-        while len(self.ROOMS) != ROOM_COUNT:
+        try_count = 0
+        while len(self.ROOMS) != ROOM_COUNT and try_count < 500:
+            print(try_count)
             room = self.get_room()
             if self.is_room_good_position(room):
                 self.place_room(room)
                 self.ROOMS.append(room)
+            try_count += 1
 
     def place_room(self, room: Room):
         for width_step in range(room.width):

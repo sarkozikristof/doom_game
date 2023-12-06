@@ -1,5 +1,5 @@
 import pygame as pg
-from map_gen.simple_room_placement import mini_map
+from map_gen.simple_room_placement import Generate
 
 _ = False
 
@@ -19,8 +19,9 @@ mini_map_v2 = [
 class Map:
     def __init__(self, game):
         self.game = game
-        self.mini_map = mini_map
         self.world_map = {}
+        self.generator = Generate()
+        self.mini_map = self.generator.get_map()
         self.get_map()
 
     def get_map(self):

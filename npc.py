@@ -1,5 +1,5 @@
 from sprite_object import AnimatedSprite
-from random import randint
+from random import randint, random
 from settings import *
 import pygame as pg
 
@@ -14,12 +14,12 @@ class NPC(AnimatedSprite):
         self.pain_images = self.get_images(self.path + '/pain')
         self.walk_images = self.get_images(self.path + '/walk')
 
-        self.attack_dist = randint(3, 6)
-        self.speed = 0.03
+        self.attack_dist = 15
+        self.speed = 0.0015
         self.size = 10
         self.health = 100
         self.attack_damage = 10
-        self.accuracy = 0.15
+        self.accuracy = 0.25
         self.alive = True
         self.pain = False
         self.ray_cast_value = False
@@ -35,8 +35,13 @@ class NPC(AnimatedSprite):
 
             elif self.ray_cast_value:
                 self.player_search_trigger = True
-                self.animate(self.walk_images)
-                self.movement()
+
+                if self.dist < self.attack_dist:
+                    self.animate(self.attack_images)
+                    self.attack()
+                else:
+                    self.animate(self.walk_images)
+                    self.movement()
 
             elif self.player_search_trigger:
                 self.animate(self.walk_images)
@@ -53,6 +58,9 @@ class NPC(AnimatedSprite):
                 self.death_images.rotate(-1)
                 self.image = self.death_images[0]
                 self.frame_counter += 1
+                self.game.player.health += int(10 / len(self.death_images))
+                if self.game.player.health > 100:
+                    self.game.player.health = 100
 
     def check_hit_in_npc(self):
         if self.game.player.shot and self.ray_cast_value:
@@ -67,6 +75,12 @@ class NPC(AnimatedSprite):
         if self.health < 1:
             self.alive = False
             self.game.sound.npc_death.play()
+
+    def attack(self):
+        if self.animation_trigger:
+            self.game.sound.npc_shot.play()
+            if random() < self.accuracy:
+                self.game.player.get_damage(self.attack_damage)
 
     def animate_pain(self):
         self.animate(self.pain_images)
@@ -100,10 +114,10 @@ class NPC(AnimatedSprite):
         # horizontals
         y_hor, dy = (y_map + 1, 1) if sin_a > 0 else (y_map - 1e-6, -1)
 
-        depth_hor = (y_hor - oy) / sin_a
+        depth_hor = (y_hor - oy) / (sin_a + 0.00001)
         x_hor = ox + depth_hor * cos_a
 
-        delta_depth = dy / sin_a
+        delta_depth = dy / (sin_a + 0.00001)
         dx = delta_depth * cos_a
 
         for i in range(MAX_DEPTH):
@@ -168,3 +182,31 @@ class NPC(AnimatedSprite):
         if self.ray_cast_player_npc():
             pg.draw.line(self.game.screen, 'orange', (100 * self.game.player.x, 100 * self.game.player.y),
                          (100 * self.x, 100 * self.y), 2)
+
+
+class SoldierNPC(NPC):
+    def __init__(self, game, path='resources/sprites/npc/soldier/0.png', pos=(10.5, 5.5),
+                 scale=0.6, shift=0.38, animation_time=180):
+        super().__init__(game, path, pos, scale, shift, animation_time)
+
+
+class CacoDemonNPC(NPC):
+    def __init__(self, game, path='resources/sprites/npc/caco_demon/0.png', pos=(10.5, 6.5),
+                 scale=0.7, shift=0.27, animation_time=250):
+        super().__init__(game, path, pos, scale, shift, animation_time)
+        self.attack_dist = 2.0
+        self.health = 150
+        self.attack_damage = 25
+        self.speed = 0.05
+        self.accuracy = 0.50
+
+
+class CyberDemonNPC(NPC):
+    def __init__(self, game, path='resources/sprites/npc/cyber_demon/0.png', pos=(11.5, 6.0),
+                 scale=1.0, shift=0.04, animation_time=210):
+        super().__init__(game, path, pos, scale, shift, animation_time)
+        self.attack_dist = 12
+        self.health = 350
+        self.attack_damage = 40
+        self.speed = 0.015
+        self.accuracy = 0.20
